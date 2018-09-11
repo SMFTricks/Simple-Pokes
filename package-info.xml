@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
+<package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
+	<id>smftricks:pokes</id>
+	<name>Simple Pokes</name>
+	<version>2.0</version>
+	<type>modification</type>
+	<install for="2.1 - 2.1.99, 2.1 Beta 1 - 3">
+
+		<!-- Mod Readme -->
+		<readme parsebbc="true" type="file">readme.txt</readme>
+
+		<!-- Languages -->
+		<require-file name="Languages/Pokes.english.php" destination="$languagedir">Language file</require-file>
+
+		<!-- Images -->
+		<require-file name="Images/poke.png" destination="$imagesdir/icons/">Poke icon</require-file>
+
+		<!-- Pokes Files -->
+		<require-file name="Sources/Pokes.php" destination="$sourcedir">Source file</require-file>
+
+		<!-- Database -->
+		<database>install.php</database>
+
+		<!-- Hooks for 2.1 -->
+		<hook hook="integrate_pre_include" function="$sourcedir/Pokes.php" file="" />
+		<hook hook="integrate_pre_profile_areas" function="Pokes::profileAreas" file="$sourcedir/Pokes.php" />
+		<hook hook="integrate_actions" function="Pokes::hookActions" file="$sourcedir/Pokes.php" />
+		<hook hook="integrate_profile_popup" function="Pokes::profilePopup" file="$sourcedir/Pokes.php" />
+		<hook hook="integrate_load_custom_profile_fields" function="Pokes::profileCustomFields" file="$sourcedir/Pokes.php" />
+	</install>
+
+	<uninstall for="2.1 - 2.1.99, 2.1 Beta 1 - 3">
+
+		<!-- Source Files -->
+		<remove-file name="$sourcedir/Pokes.php">Source files</remove-dir>
+
+		<!-- Images -->
+		<remove-file name="$imagesdir/icons/poke.png">Poke icon</remove-file>
+
+		<!-- Languages -->
+		<remove-file name="$languagedir/Pokes.english.php">Language file</remove-file>
+
+		<!-- Database -->
+		<database>install.php</database>
+	</uninstall>
+</package-info>

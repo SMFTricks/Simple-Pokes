@@ -1,0 +1,394 @@
+<?php
+
+/**
+ * @package Simple Pokes
+ * @version 2.0
+ * @author Diego Andrés <diegoandres_cortes@outlook.com>
+ * @copyright Copyright (c) 2018, Diego Andrés
+ * @license http://www.mozilla.org/MPL/MPL-1.1.html
+ */
+
+if (!defined('SMF'))
+	die('hacking attempt...');
+
+class Pokes
+{
+	public static function hookButtons(&$buttons)
+	{
+		global $context, $txt, $scripturl, $modSettings, $settings;
+
+		loadLanguage('Pokes');
+
+		$before = 'mlist';
+		$temp_buttons = array();
+		foreach ($buttons as $k => $v) {
+			if ($k == $before) {
+				$temp_buttons['pokes'] = array(
+					'title' => $txt['pokes'],
+					'href' => $scripturl . '?action=pokes',
+					'icon' => 'icons/poke.png',
+					'show' => true,
+				);
+			}
+			$temp_buttons[$k] = $v;
+		}
+		$buttons = $temp_buttons;
+	}
+
+	public static function hookActions(&$actions)
+	{
+		$actions['pokes'] = array(false, 'Pokes::mainActions');
+	}
+
+	public static function profileAreas(&$profile_areas)
+	{
+		global $txt, $scripturl;
+
+		loadLanguage('Pokes');
+
+		// Profile information
+		$before = 'statistics';
+		$temp_buttons = array();
+		foreach ($profile_areas['info']['areas'] as $k => $v) {
+			if ($k == $before) {
+				$temp_buttons['pokes'] = array(
+					'label' => $txt['pokes'],
+					'custom_url' => $scripturl . '?action=pokes',
+					'icon' => 'members_request',
+					'enabled' => true,
+					'permission' => array(
+						'own' => 'profile_view',
+						'any' => array(),
+					),
+				);
+			}
+			$temp_buttons[$k] = $v;
+		}
+		$profile_areas['info']['areas'] = $temp_buttons;
+	}
+
+	public static function profilePopup(&$profile_items)
+	{
+		global $scripturl;
+
+		$profile_items[] = array(
+			'menu' => 'info',
+			'url' => $scripturl . '?action=pokes',
+			'area' => 'pokes',
+		);
+	}
+
+	public static function profileCustomFields($memID, $area)
+	{
+		global $txt, $context, $scripturl, $user_info;
+
+		if ($context['member']['id'] != $user_info['id'])
+		{
+			$context['custom_fields']['pokes'] = array(
+				'name' => $txt['pokes'],
+				'colname' => $txt['pokes'],
+				'output_html' => '<a href="'.$scripturl.'?action=pokes;sa=pokeuser;id='.$memID.';'. $context['session_var'] .'='. $context['session_id'] .'">'.$txt['poke_user'].'</a>',
+				'placement' => 6,
+			);
+		}
+	}
+
+	/*
+	public static function alertsFetch(&$alerts){}
+	public function alertsTypes(&$alert_types, &$group_options)
+	{
+		// Gonna need some strings.
+		loadLanguage('Alerts');
+		$alert_types['pokes'] = array(
+			'poke' => array('alert' => 'yes', 'email' => 'never'),
+		);
+	}
+	*/
+
+	public static function mainActions()
+	{
+		global $txt, $context, $scripturl;
+
+		loadLanguage('Pokes');
+
+		// Set all the page stuff
+		$context['page_title'] = $txt['pokes'];
+		$context['linktree'][] = array(
+			'url' => $scripturl . '?action=pokes',
+			'name' => $txt['pokes'],
+		);
+
+		$subactions = array(
+			'list' => array(
+				'function' => 'Pokes::mainList',
+			),
+			'pokeuser' => array(
+				'function' => 'Pokes::actionPoke',
+			),
+			'pokeignore' => array(
+				'function' => 'Pokes::actionIgnore',
+			),
+		);
+
+		// By default
+		$sa = 'list';
+		if (isset($_REQUEST['sa']) && array_key_exists($_REQUEST['sa'], $subactions) && ($_REQUEST['sa'] != 'list'))
+			$sa = $_REQUEST['sa'];
+		$subactions[$sa]['function']();
+	}
+
+	public static function mainList()
+	{
+		global $txt, $context, $scripturl, $sourcedir;
+
+		require_once($sourcedir . '/Subs-List.php');
+		$context['sub_template'] = 'show_list';
+		$context['default_list'] = 'pokeslist';
+
+		// The entire list
+		$listOptions = array(
+			'id' => 'pokeslist',
+			'title' => $txt['pokes_log_title'],
+			'items_per_page' => 10,
+			'base_href' => '?action=pokes',
+			'default_sort_col' => 'date',
+			'get_items' => array(
+				'function' => 'Pokes::getPokes',
+			),
+			'get_count' => array(
+				'function' => 'Pokes::countPokes',
+			),
+			'no_items_label' => $txt['poke_list_empty'],
+			'no_items_align' => 'center',
+			'columns' => array(
+				'from_user' => array(
+					'header' => array(
+						'value' => $txt['poker'],
+						'class' => 'lefttext',
+					),
+					'data' => array(
+						'sprintf' => array(
+							'format' => '<a href="'. $scripturl . '?action=profile;u=%1$d">%2$s</a>',
+							'params' => array(
+								'id_poker' => false,
+								'name_poker' => true,
+							),
+						),
+						'style' => 'width: 30%',
+					),
+					'sort' =>  array(
+						'default' => 'name_poker DESC',
+						'reverse' => 'name_poker',
+					),
+				),
+				'poke_back' => array(
+					'header' => array(
+						'value' => $txt['poke_back'],
+						'class' => 'centertext',
+					),
+					'data' => array(
+						'function' => function($row) { global $scripturl, $txt, $context;
+							return '<a href="'.$scripturl.'?action=pokes;sa=pokeuser;id='.$row['id_poker'].';'. $context['session_var'] .'='. $context['session_id'] .'">'.$txt['poke_back'].'</a>';
+						},
+						'class' => 'centertext',
+						'style' => 'width: 15%',
+					),
+				),
+				'date' => array(
+					'header' => array(
+						'value' => $txt['poke_time'],
+						'class' => ' lefttext',
+					),
+					'data' => array(
+						'function' => function($row) {return timeformat($row['date']);},
+						'style' => 'width: 25%',
+					),
+					'sort' =>  array(
+						'default' => 'date DESC',
+						'reverse' => 'date',
+					),
+				),
+				'poke_ignore' => array(
+					'header' => array(
+						'value' => $txt['poke_ignore'],
+						'class' => 'centertext',
+					),
+					'data' => array(
+						'function' => function($row) { global $scripturl, $txt, $context;
+							return '<a href="'.$scripturl.'?action=pokes;sa=pokeignore;id='.$row['id_poker'].';'. $context['session_var'] .'='. $context['session_id'] .'">'.$txt['poke_ignore'].'</a>';
+						},
+						'class' => 'centertext',
+						'style' => 'width: 10%',
+					),
+				),
+			),
+			'additional_rows' => array(
+				''
+			),
+		);
+		// Let's finishem
+		createList($listOptions);
+	}
+
+	public static function countPokes()
+	{
+		global $smcFunc, $user_info;
+
+		// Count the log entries
+		$logs = $smcFunc['db_query']('', '
+			SELECT p.id_member
+			FROM {db_prefix}pokes AS p
+			WHERE p.id_member = {int:userid}',
+			array(
+				'userid' => $user_info['id']
+			)
+		);
+		$count = $smcFunc['db_num_rows']($logs);
+		$smcFunc['db_free_result']($logs);
+
+		return $count;
+	}
+
+	public static function getPokes($start, $items_per_page, $sort)
+	{
+		global $context, $smcFunc, $user_info;
+
+		// Get a list of all the item
+		$result = $smcFunc['db_query']('', '
+			SELECT p.id_member, p.id_poker, p.date, m.real_name AS name_poker
+			FROM {db_prefix}pokes AS p
+				LEFT JOIN {db_prefix}members AS m ON (m.id_member = p.id_poker)
+			WHERE p.id_member = {int:userid}
+			ORDER by {raw:sort}
+			LIMIT {int:start}, {int:maxindex}',
+			array(
+				'start' => $start,
+				'maxindex' => $items_per_page,
+				'sort' => $sort,
+				'userid' => $user_info['id'],
+			)
+		);
+
+		// Return the data
+		$context['pokes_list'] = array();
+		while ($row = $smcFunc['db_fetch_assoc']($result))
+			$context['pokes_list'][] = $row;
+		$smcFunc['db_free_result']($result);
+
+		return $context['pokes_list'];
+	}
+
+	public static function verifyPoke($memID, $poker)
+	{
+		global $smcFunc;
+
+		$verify = $smcFunc['db_query']('', '
+			SELECT p.id_poker, p.id_member
+			FROM {db_prefix}pokes AS p
+			WHERE p.id_poker = {int:poker} AND p.id_member = {int:userid}',
+			array(
+				'userid' => $memID,
+				'poker' => $poker,
+			)
+		);
+		$count  = $smcFunc['db_num_rows']($verify);
+		$smcFunc['db_free_result']($verify);
+
+		return $count;
+	}
+
+	public static function actionIgnore()
+	{
+		global $smcFunc, $user_info, $txt, $context;
+
+		// We got something?
+		if (!isset($_REQUEST['id']) || empty($_REQUEST['id']))
+			fatal_error($txt['poke_nouser_error'], false);
+		// He's sending a poke to someone else, right?
+		elseif ($user_info['id'] == $_REQUEST['id'])
+			fatal_error($txt['poke_yourself_error'], false);
+
+		checkSession('get');
+
+		$memID = (int) $_REQUEST['id'];
+
+		$context['poke_active'] = self::verifyPoke($user_info['id'], $memID);
+
+		// Let's see if we can poke him
+		if (!empty($context['poke_active']))
+		{
+			$smcFunc['db_query']('', '
+				DELETE FROM {db_prefix}pokes
+				WHERE id_poker = {int:poker} AND id_member = {int:userid}',
+				array(
+					'userid' => $user_info['id'],
+					'poker' => $memID,
+				)
+			);
+			redirectexit('action=pokes');
+		}
+		else
+			fatal_error($txt['poke_not_there'], false);
+	}
+
+	public static function actionPoke()
+	{
+		global $smcFunc, $user_info, $txt, $context;
+
+		// We got something?
+		if (!isset($_REQUEST['id']) || empty($_REQUEST['id']))
+			fatal_error($txt['poke_nouser_error'], false);
+		// He's sending a poke to someone else, right?
+		elseif ($user_info['id'] == $_REQUEST['id'])
+			fatal_error($txt['poke_yourself_error'], false);
+
+		checkSession('get');
+
+		$memID = (int) $_REQUEST['id'];
+
+		$memberResult = loadMemberData($memID, false, 'profile');
+		// Check if loadMemberData() has returned a valid result.
+		if (!$memberResult)
+			fatal_lang_error('not_a_user', false, 404);
+
+		$context['poke_active'] = self::verifyPoke($memID, $user_info['id']);
+		$context['poke_return'] = self::verifyPoke($user_info['id'], $memID);
+
+		// Let's see if we can poke him
+		if (empty($context['poke_active']))
+		{
+			// First remove the active poke if there's any
+			if (!empty($context['poke_return']))
+			{
+				$smcFunc['db_query']('', '
+					DELETE FROM {db_prefix}pokes
+					WHERE id_poker = {int:poker} AND id_member = {int:userid}',
+					array(
+						'userid' => $user_info['id'],
+						'poker' => $memID,
+					)
+				);
+			}
+
+			// Poke this user
+			$smcFunc['db_insert']('',
+				'{db_prefix}pokes',
+				array(
+					'id_member' => 'int',
+					'id_poker' => 'int',
+					'date' => 'int',
+				),
+				array(
+					$memID,
+					$user_info['id'],
+					time()
+				),
+				array()
+			);
+
+			redirectexit('action=pokes;success');
+		}
+		else
+			fatal_error($txt['poke_already_sent'], false);
+	}
+}
