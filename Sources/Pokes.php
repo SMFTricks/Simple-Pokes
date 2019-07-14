@@ -82,7 +82,7 @@ class Pokes
 	{
 		global $txt, $context, $scripturl, $user_info;
 
-		if ($context['member']['id'] != $user_info['id'])
+		if (!empty($context['member']) && $context['member']['id'] != $user_info['id'])
 		{
 			$context['custom_fields']['pokes'] = array(
 				'name' => $txt['pokes'],
@@ -91,6 +91,13 @@ class Pokes
 				'placement' => 6,
 			);
 		}
+	}
+
+	public static function alertTypes(&$alert_types, &$group_options)
+	{
+		$alert_types['pokes'] = array(
+				'poked' => array('alert' => 'yes', 'email' => 'never'),
+		);
 	}
 
 	/*
