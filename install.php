@@ -20,6 +20,50 @@
 
 	if (empty($context['uninstalling']))
 	{
+		// Background Task
+		$smcFunc['db_insert'](
+			'ignore',
+			'{db_prefix}background_tasks',
+			array(
+				'task_file' => 'string',
+				'task_class' => 'string',
+				'task_data' => 'string',
+				'claimed_time' => 'int',
+			),
+			array(
+				array(
+					'$sourcedir/tasks/Pokes-Notify.php',
+					'Pokes_Notify_Background',
+					$smcFunc['json_encode'](array(
+						'poker_id' => $context['user']['id'],
+						'poker_name' => $context['user']['name'],
+						'time' => time(),
+					)),
+					0,
+				),
+			),
+			array('id_task')
+		);
+
+		// Enable the alert by default
+		$smcFunc['db_insert'](
+			'ignore',
+			'{db_prefix}user_alerts_prefs',
+			array(
+				'id_member' => 'int',
+				'alert_pref' => 'string',
+				'alert_value' => 'int',
+			),
+			array(
+				array(
+					0,
+					'poked',
+					1,
+				),
+			),
+			array('id_task')
+		);
+
 		// Shop items
 		$tables[] = array(
 			'table_name' => '{db_prefix}pokes',
