@@ -18,10 +18,9 @@
 
 		<!-- Pokes Files -->
 		<require-file name="Sources/Pokes.php" destination="$sourcedir">Source file</require-file>
-
+		<require-file name="Sources/tasks/Pokes-Notify.php" destination="$sourcedir/tasks">Alerts file</require-file>
 		<!-- Database -->
 		<database>install.php</database>
-
 		<!-- Hooks for 2.1 -->
 		<hook hook="integrate_pre_include" function="$sourcedir/Pokes.php" file="" />
 		<hook hook="integrate_pre_profile_areas" function="Pokes::profileAreas" file="$sourcedir/Pokes.php" />
@@ -29,19 +28,19 @@
 		<hook hook="integrate_profile_popup" function="Pokes::profilePopup" file="$sourcedir/Pokes.php" />
 		<hook hook="integrate_load_custom_profile_fields" function="Pokes::profileCustomFields" file="$sourcedir/Pokes.php" />
 		<hook hook="integrate_alert_types" function="Pokes::alertTypes" file="$sourcedir/Pokes.php" />
+		<hook hook="integrate_show_alert" function="Pokes::alertShow" file="$sourcedir/Pokes.php" />
+		<hook hook="integrate_fetch_alerts" function="Pokes::alertFetch" file="$sourcedir/Pokes.php" />
 	</install>
 
 	<uninstall for="2.1 - 2.1.99, 2.1 Beta 1 - 3">
 
 		<!-- Source Files -->
 		<remove-file name="$sourcedir/Pokes.php">Source files</remove-dir>
-
+		<remove-file name="$sourcedir/tasks/Pokes-Notify.php">Alerts files</remove-dir>
 		<!-- Images -->
 		<remove-file name="$imagesdir/icons/poke.png">Poke icon</remove-file>
-
 		<!-- Languages -->
 		<remove-file name="$languagedir/Pokes.english.php">Language file</remove-file>
-
 		<!-- Database -->
 		<database>install.php</database>
 	</uninstall>
