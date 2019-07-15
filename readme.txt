@@ -1,4 +1,4 @@
-[center][url=http://smftricks.com][img]http://smftricks.com/logos/logo.png[/img][/url][/center]
+[center][url=https://smftricks.com][img]http://smftricks.com/logos/logo.png[/img][/url][/center]
 
 [center][size=14pt]Simple Pokes[/size][/center]
 
