@@ -17,3 +17,4 @@ $txt['alert_group_pokes'] = 'Pokes';
 $txt['alert_poked'] = 'When I receive a poke from someone';
 $txt['alert_poke_poked'] = '{member_link} just sent you a poke';
 $txt['poke_noti_poked'] = 'just sent you a poke';
+$txt['pokes_action_success'] = 'Poke was successfully sent';
