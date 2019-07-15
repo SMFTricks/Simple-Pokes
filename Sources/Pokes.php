@@ -103,12 +103,16 @@ class Pokes
 	
 	public static function alertShow(&$alert, &$link)
 	{
+		global $scripturl;
+		
 		if (isset($alert['extra']['pokes_link']))
 			$link = $scripturl . $alert['extra']['pokes_link'];
 	}
 
 	public static function alertFetch(&$alerts, &$formats)
 	{
+		global $settings;
+
 		foreach ($alerts as $alert_id => $alert)
 			if ($alert['content_type'] == 'poke')
 				$alerts[$alert_id]['icon'] = '<img class="alert_icon" src="' . $settings['images_url'] . '/icons/poke.png">';
@@ -232,7 +236,10 @@ class Pokes
 				),
 			),
 			'additional_rows' => array(
-				''
+				'updated' => array(
+					'position' => 'top_of_list',
+					'value' => !isset($_REQUEST['success']) ? '' : '<div class="infobox">'. $txt['pokes_action_success']. '</div>',
+				),
 			),
 		);
 		// Let's finishem
