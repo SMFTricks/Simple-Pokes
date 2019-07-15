@@ -100,17 +100,19 @@ class Pokes
 		);
 	}
 
-	/*
-	public static function alertsFetch(&$alerts){}
-	public function alertsTypes(&$alert_types, &$group_options)
+	
+	public static function alertShow(&$alert, &$link)
 	{
-		// Gonna need some strings.
-		loadLanguage('Alerts');
-		$alert_types['pokes'] = array(
-			'poke' => array('alert' => 'yes', 'email' => 'never'),
-		);
+		if (isset($alert['extra']['pokes_link']))
+			$link = $scripturl . $alert['extra']['pokes_link'];
 	}
-	*/
+
+	public static function alertFetch(&$alerts, &$formats)
+	{
+		foreach ($alerts as $alert_id => $alert)
+			if ($alert['content_type'] == 'poke')
+				$alerts[$alert_id]['icon'] = '<img class="alert_icon" src="' . $settings['images_url'] . '/icons/poke.png">';
+	}
 
 	public static function mainActions()
 	{
@@ -391,6 +393,32 @@ class Pokes
 					time()
 				),
 				array()
+			);
+
+			// Background Task
+			$smcFunc['db_insert'](
+				'ignore',
+				'{db_prefix}background_tasks',
+				array(
+					'task_file' => 'string',
+					'task_class' => 'string',
+					'task_data' => 'string',
+					'claimed_time' => 'int',
+				),
+				array(
+					array(
+						'$sourcedir/tasks/Pokes-Notify.php',
+						'Pokes_Notify_Background',
+						$smcFunc['json_encode'](array(
+							'poker_id' => $user_info['id'],
+							'poker_name' => $user_info['name'],
+							'poked_id' => $memID,
+							'time' => time(),
+						)),
+						0,
+					),
+				),
+				array('id_task')
 			);
 
 			redirectexit('action=pokes;success');
