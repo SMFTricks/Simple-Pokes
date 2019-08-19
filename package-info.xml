@@ -10,12 +10,12 @@
 		<!-- Mod Readme -->
 		<readme lang="english" parsebbc="true" type="file">readme.txt</readme>
 		<!-- Credits -->
-		<credits url="https://smftricks.com" license="MPL 1.1" copyright="SMF Tricks" licenseurl="https://www.mozilla.org/en-US/MPL/1.1/">Simple Pokes</credits>
+		<credits url="https://smftricks.com" license="MPL 2.0" copyright="SMF Tricks" licenseurl="https://www.mozilla.org/en-US/MPL/2.0/">Simple Pokes</credits>
 		<!-- License -->
 		<license type="inline" parsebbc="false">
 			This Source Code Form is subject to the terms of the Mozilla Public
-			License, v. 1.1. If a copy of the MPL was not distributed with this
-			file, You can obtain one at https://www.mozilla.org/en-US/MPL/1.1/.
+			License, v. 2.0. If a copy of the MPL was not distributed with this
+			file, You can obtain one at https://www.mozilla.org/en-US/MPL/2.0/.
 		</license>
 		<!-- Languages -->
 		<require-file name="Languages/Pokes.english.php" destination="$languagedir">Language file</require-file>
