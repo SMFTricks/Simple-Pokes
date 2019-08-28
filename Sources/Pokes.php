@@ -100,7 +100,6 @@ class Pokes
 		);
 	}
 
-	
 	public static function alertShow(&$alert, &$link)
 	{
 		global $scripturl;
