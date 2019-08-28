@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
-	<id>grafitus:SimplePokes</id>
+	<id>smftricks:SimplePokes</id>
 	<name>Simple Pokes</name>
 	<version>2.0.1</version>
 	<type>modification</type>
