@@ -89,7 +89,8 @@ class Pokes_Notify_Background extends SMF_BackgroundTask
 			),
 			array(
 				$this->_details['time'],
-				$author, $this->_details['poker_id'],
+				$author,
+				$this->_details['poker_id'],
 				$this->_details['poker_name'],
 				'poke',
 				$this->_details['poker_id'],
