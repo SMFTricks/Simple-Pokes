@@ -20,7 +20,7 @@
 		<!-- Languages -->
 		<require-file name="Languages/Pokes.english.php" destination="$languagedir">Language file</require-file>
 		<!-- Images -->
-		<require-file name="Images/poke.png" destination="$imagesdir/icons/">Poke icon</require-file>
+		<require-file name="Images/poke.png" destination="$imagesdir/icons">Poke icon</require-file>
 		<!-- Pokes Files -->
 		<require-file name="Sources/Pokes.php" destination="$sourcedir">Source file</require-file>
 		<require-file name="Sources/tasks/Pokes-Notify.php" destination="$sourcedir/tasks">Alerts file</require-file>
