@@ -30,14 +30,14 @@ class Pokes_Notify_Background extends SMF_BackgroundTask
 		$request = $smcFunc['db_query']('', '
 			SELECT mem.id_member, mem.pm_ignore_list
 			FROM {db_prefix}members AS mem
-			WHERE mem.id_member = {int:poked}',
+			WHERE mem.id_member = {int:poked}
+			LIMIT 1',
 			array(
 				'poked' => $this->_details['poked_id'],
 			)
 		);
 		if ($row = $smcFunc['db_fetch_assoc']($request))
 		{
-			//$ignored_members = explode(',', $row['pm_ignore_list']);
 			$author = $row['id_member'];
 		
 		}
@@ -51,7 +51,6 @@ class Pokes_Notify_Background extends SMF_BackgroundTask
 		if ($author == $this->_details['poker_id'])
 			return true;
 
-	
 		// Don't spam the alerts: if there is an existing unread alert of the
 		// requested type for the target user from the sender, don't make a new one.
 		$request = $smcFunc['db_query']('', '
