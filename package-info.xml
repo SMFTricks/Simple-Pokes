@@ -3,7 +3,7 @@
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>grafitus:SimplePokes</id>
 	<name>Simple Pokes</name>
-	<version>2.0</version>
+	<version>2.0.1</version>
 	<type>modification</type>
 	<install for="2.1 - 2.1.99, 2.1 Beta 1 - 3">
 
@@ -23,7 +23,6 @@
 		<require-file name="Images/poke.png" destination="$imagesdir/icons">Poke icon</require-file>
 		<!-- Pokes Files -->
 		<require-file name="Sources/Pokes.php" destination="$sourcedir">Source file</require-file>
-		<require-file name="Sources/tasks/Pokes-Notify.php" destination="$sourcedir/tasks">Alerts file</require-file>
 		<!-- Database -->
 		<database>install.php</database>
 		<!-- Hooks for 2.1 -->
@@ -41,7 +40,6 @@
 
 		<!-- Source Files -->
 		<remove-file name="$sourcedir/Pokes.php">Source files</remove-dir>
-		<remove-file name="$sourcedir/tasks/Pokes-Notify.php">Alerts files</remove-dir>
 		<!-- Images -->
 		<remove-file name="$imagesdir/icons/poke.png">Poke icon</remove-file>
 		<!-- Languages -->

@@ -401,35 +401,76 @@ class Pokes
 				array()
 			);
 
-			// Background Task
-			$smcFunc['db_insert'](
-				'ignore',
-				'{db_prefix}background_tasks',
-				array(
-					'task_file' => 'string',
-					'task_class' => 'string',
-					'task_data' => 'string',
-					'claimed_time' => 'int',
-				),
-				array(
-					array(
-						'$sourcedir/tasks/Pokes-Notify.php',
-						'Pokes_Notify_Background',
-						$smcFunc['json_encode'](array(
-							'poker_id' => $user_info['id'],
-							'poker_name' => $user_info['name'],
-							'poked_id' => $memID,
-							'time' => time(),
-						)),
-						0,
-					),
-				),
-				array('id_task')
-			);
+			self::deployAlert($memID);
 
 			redirectexit('action=pokes;success');
 		}
 		else
 			fatal_error($txt['poke_already_sent'], false);
+	}
+
+	public static function deployAlert($memID)
+	{
+		global $smcFunc, $sourcedir, $user_info;
+
+		require_once($sourcedir . '/Subs-Notify.php');
+		$prefs = getNotifyPrefs($memID, 'poked', true);
+
+		// Send alert
+		// Check the value. If no value or it's empty, they didn't want alerts, oh well.
+		if (empty($prefs[$memID]['poked']))
+			return true;
+
+		// Don't spam the alerts: if there is an existing unread alert of the
+		// requested type for the target user from the sender, don't make a new one.
+		$request = $smcFunc['db_query']('', '
+			SELECT id_alert
+			FROM {db_prefix}user_alerts
+			WHERE id_member = {int:id_member}
+				AND is_read = 0
+				AND content_type = {string:content_type}
+				AND content_id = {int:content_id}
+				AND content_action = {string:content_action}',
+			array(
+				'id_member' => $memID,
+				'content_type' => 'poke',
+				'content_id' => $user_info['id'],
+				'content_action' => 'poked',
+			)
+		);
+
+		if ($smcFunc['db_num_rows']($request) > 0)
+			return true;
+		$smcFunc['db_free_result']($request);
+
+		// Issue, update, move on.
+		$smcFunc['db_insert']('insert',
+			'{db_prefix}user_alerts',
+			array(
+				'alert_time' => 'int',
+				'id_member' => 'int',
+				'id_member_started' => 'int',
+				'member_name' => 'string',
+				'content_type' => 'string',
+				'content_id' => 'int',
+				'content_action' => 'string',
+				'is_read' => 'int',
+				'extra' => 'string'
+			),
+			array(
+				time(),
+				$memID,
+				$user_info['id'],
+				$user_info['name'],
+				'poke',
+				$user_info['id'],
+				'poked',
+				0,
+				$smcFunc['json_encode'](array('pokes_link' => '?action=pokes'))
+			),
+			array('id_alert')
+		);
+
+		updateMemberData($memID, array('alerts' => '+'));
 	}
 }
