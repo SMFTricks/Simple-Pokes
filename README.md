@@ -1,17 +1,23 @@
-# Simple-Pokes
-A very simple SMF mod that emulates Facebook Pokes
+ <p align="center">
+    <img src="https://smftricks.com/logos/logo.png">
+ </p>
+ 
+## Simple Pokes
+- Developed by Diego Andrés: https://github.com/DiegoAndresCortes
+- Original developer: grafitus: https://github.com/beratdogan
 
-    Developed by Diego Andrés
-    Original Author: Berat "grafitus" Dogan
+## Introduction
+* Simple Pokes provides a very simple functionality that emulates the FB Pokes system, and takes advantage of the SMF 2.1 Alerts system for a better interaction with the mod.
 
-Introduction
+## Features
+- Send pokes
+- Ignore pokes
+- Disable/enable alerts when receiving a poke
 
-    Simple Pokes provides a very simple functionality that emulates the FB Pokes system, and takes advantage of the SMF 2.1 Alerts system for a better interaction with the mod.
+## Requirements
+* SMF 2.1
 
-Features
-
-    Send pokes
-    Ignore pokes
-    Disable/enable alerts when receiving a poke
+## How to install
+* You can install Simple Pokes through the package manager of your forum administration.
 
 
