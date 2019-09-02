@@ -21,6 +21,6 @@
 * You can install Simple Pokes through the package manager of your forum administration.
 
 ## Changelog
-You can find the changelog for Simple Pokes on SMF Tricks: [GChangelog](https://smftricks.com/index.php?topic=2015.0)
+You can find the changelog for Simple Pokes on SMF Tricks: [Changelog](https://smftricks.com/index.php?topic=2015.0)
 
 
