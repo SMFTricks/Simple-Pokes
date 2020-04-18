@@ -100,21 +100,16 @@ class Pokes
 		);
 	}
 
-	public static function alertShow(&$alert, &$link)
-	{
-		global $scripturl;
-		
-		if (isset($alert['extra']['pokes_link']))
-			$link = $scripturl . $alert['extra']['pokes_link'];
-	}
-
 	public static function alertFetch(&$alerts, &$formats)
 	{
-		global $settings;
+		global $settings, $scripturl;
 
 		foreach ($alerts as $alert_id => $alert)
 			if ($alert['content_type'] == 'poke')
+			{
 				$alerts[$alert_id]['icon'] = '<img class="alert_icon" src="' . $settings['images_url'] . '/icons/poke.png">';
+				$alerts[$alert_id]['extra']['content_link'] = $scripturl . $alert['extra']['pokes_link'];
+			}
 	}
 
 	public static function mainActions()
