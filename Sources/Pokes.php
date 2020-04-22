@@ -2,7 +2,7 @@
 
 /**
  * @package Simple Pokes
- * @version 2.0
+ * @version 2.0.3
  * @author Diego Andrés <diegoandres_cortes@outlook.com>
  * @copyright Copyright (c) 2019, SMF Tricks
  * @license https://www.mozilla.org/en-US/MPL/2.0/
