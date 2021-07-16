@@ -47,18 +47,18 @@
 					'name' => 'id_member',
 					'type' => 'int',
 					'size' => 10,
-					'null' => false,
+					'not_null' => true,
 				),
 				array(
 					'name' => 'id_poker',
 					'type' => 'int',
 					'size' => 10,
-					'null' => false,
+					'not_null' => true,
 				),
 				array(
 					'name' => 'date',
 					'type' => 'int',
-					'null' => false,
+					'not_null' => true,
 				),
 			),
 			'indexes' => array(
