@@ -2,9 +2,9 @@
 
 /**
  * @package Simple Pokes
- * @version 2.0.3
+ * @version 2.0.5
  * @author Diego Andrés <diegoandres_cortes@outlook.com>
- * @copyright Copyright (c) 2019, SMF Tricks
+ * @copyright Copyright (c) 2021, SMF Tricks
  * @license https://www.mozilla.org/en-US/MPL/2.0/
  */
 
@@ -15,20 +15,20 @@ class Pokes
 {
 	public static function hookButtons(&$buttons)
 	{
-		global $context, $txt, $scripturl, $modSettings, $settings;
+		global $txt, $scripturl;
 
 		loadLanguage('Pokes');
 
 		$before = 'mlist';
-		$temp_buttons = array();
+		$temp_buttons = [];
 		foreach ($buttons as $k => $v) {
 			if ($k == $before) {
-				$temp_buttons['pokes'] = array(
+				$temp_buttons['pokes'] = [
 					'title' => $txt['pokes'],
 					'href' => $scripturl . '?action=pokes',
 					'icon' => 'icons/poke.png',
 					'show' => true,
-				);
+				];
 			}
 			$temp_buttons[$k] = $v;
 		}
@@ -37,7 +37,7 @@ class Pokes
 
 	public static function hookActions(&$actions)
 	{
-		$actions['pokes'] = array(false, 'Pokes::mainActions');
+		$actions['pokes'] = [false, 'Pokes::mainActions'];
 	}
 
 	public static function profileAreas(&$profile_areas)
@@ -48,19 +48,19 @@ class Pokes
 
 		// Profile information
 		$before = 'statistics';
-		$temp_buttons = array();
+		$temp_buttons = [];
 		foreach ($profile_areas['info']['areas'] as $k => $v) {
 			if ($k == $before) {
-				$temp_buttons['pokes'] = array(
+				$temp_buttons['pokes'] = [
 					'label' => $txt['pokes'],
 					'custom_url' => $scripturl . '?action=pokes',
 					'icon' => 'members_request',
 					'enabled' => true,
-					'permission' => array(
+					'permission' => [
 						'own' => 'profile_view',
-						'any' => array(),
-					),
-				);
+						'any' => [],
+					],
+				];
 			}
 			$temp_buttons[$k] = $v;
 		}
@@ -71,11 +71,11 @@ class Pokes
 	{
 		global $scripturl;
 
-		$profile_items[] = array(
+		$profile_items[] = [
 			'menu' => 'info',
 			'url' => $scripturl . '?action=pokes',
 			'area' => 'pokes',
-		);
+		];
 	}
 
 	public static function profileCustomFields($memID, $area)
@@ -84,20 +84,20 @@ class Pokes
 
 		if (!empty($context['member']) && $context['member']['id'] != $user_info['id'])
 		{
-			$context['custom_fields']['pokes'] = array(
+			$context['custom_fields']['pokes'] = [
 				'name' => $txt['pokes'],
 				'colname' => $txt['pokes'],
 				'output_html' => '<a href="'.$scripturl.'?action=pokes;sa=pokeuser;id='.$memID.';'. $context['session_var'] .'='. $context['session_id'] .'">'.$txt['poke_user'].'</a>',
 				'placement' => 6,
-			);
+			];
 		}
 	}
 
 	public static function alertTypes(&$alert_types, &$group_options)
 	{
-		$alert_types['pokes'] = array(
-				'poked' => array('alert' => 'yes', 'email' => 'never'),
-		);
+		$alert_types['pokes'] = [
+				'poked' => ['alert' => 'yes', 'email' => 'never'],
+		];
 	}
 
 	public static function alertFetch(&$alerts, &$formats)
@@ -105,11 +105,13 @@ class Pokes
 		global $settings, $scripturl;
 
 		foreach ($alerts as $alert_id => $alert)
+		{
 			if ($alert['content_type'] == 'poke')
 			{
 				$alerts[$alert_id]['icon'] = '<img class="alert_icon" src="' . $settings['images_url'] . '/icons/poke.png">';
 				$alerts[$alert_id]['extra']['content_link'] = $scripturl . $alert['extra']['pokes_link'];
 			}
+		}
 	}
 
 	public static function mainActions()
@@ -120,22 +122,22 @@ class Pokes
 
 		// Set all the page stuff
 		$context['page_title'] = $txt['pokes'];
-		$context['linktree'][] = array(
+		$context['linktree'][] = [
 			'url' => $scripturl . '?action=pokes',
 			'name' => $txt['pokes'],
-		);
+		];
 
-		$subactions = array(
-			'list' => array(
+		$subactions = [
+			'list' => [
 				'function' => 'Pokes::mainList',
-			),
-			'pokeuser' => array(
+			],
+			'pokeuser' => [
 				'function' => 'Pokes::actionPoke',
-			),
-			'pokeignore' => array(
+			],
+			'pokeignore' => [
 				'function' => 'Pokes::actionIgnore',
-			),
-		);
+			],
+		];
 
 		// By default
 		$sa = 'list';
@@ -153,89 +155,94 @@ class Pokes
 		$context['default_list'] = 'pokeslist';
 
 		// The entire list
-		$listOptions = array(
+		$listOptions = [
 			'id' => 'pokeslist',
 			'title' => $txt['pokes_log_title'],
 			'items_per_page' => 10,
 			'base_href' => '?action=pokes',
 			'default_sort_col' => 'date',
-			'get_items' => array(
+			'get_items' => [
 				'function' => 'Pokes::getPokes',
-			),
-			'get_count' => array(
+			],
+			'get_count' => [
 				'function' => 'Pokes::countPokes',
-			),
+			],
 			'no_items_label' => $txt['poke_list_empty'],
 			'no_items_align' => 'center',
-			'columns' => array(
-				'from_user' => array(
-					'header' => array(
+			'columns' => [
+				'from_user' => [
+					'header' => [
 						'value' => $txt['poker'],
 						'class' => 'lefttext',
-					),
-					'data' => array(
-						'sprintf' => array(
+					],
+					'data' => [
+						'sprintf' => [
 							'format' => '<a href="'. $scripturl . '?action=profile;u=%1$d">%2$s</a>',
-							'params' => array(
+							'params' => [
 								'id_poker' => false,
 								'name_poker' => true,
-							),
-						),
+							],
+						],
 						'style' => 'width: 30%',
-					),
-					'sort' =>  array(
+					],
+					'sort' =>  [
 						'default' => 'name_poker DESC',
 						'reverse' => 'name_poker',
-					),
-				),
-				'poke_back' => array(
-					'header' => array(
+					],
+				],
+				'poke_back' => [
+					'header' => [
 						'value' => $txt['poke_back'],
 						'class' => 'centertext',
-					),
-					'data' => array(
-						'function' => function($row) { global $scripturl, $txt, $context;
+					],
+					'data' => [
+						'function' => function($row) use ($scripturl, $txt, $context)
+						{
 							return '<a href="'.$scripturl.'?action=pokes;sa=pokeuser;id='.$row['id_poker'].';'. $context['session_var'] .'='. $context['session_id'] .'">'.$txt['poke_back'].'</a>';
 						},
 						'class' => 'centertext',
 						'style' => 'width: 15%',
-					),
-				),
-				'date' => array(
-					'header' => array(
+					],
+				],
+				'date' => [
+					'header' => [
 						'value' => $txt['poke_time'],
 						'class' => ' lefttext',
-					),
-					'data' => array(
-						'function' => function($row) {return timeformat($row['date']);},
+					],
+					'data' => [
+						'function' => function($row)
+						{
+							return timeformat($row['date']);
+						},
 						'style' => 'width: 25%',
-					),
-					'sort' =>  array(
+					],
+					'sort' =>  [
 						'default' => 'date DESC',
 						'reverse' => 'date',
-					),
-				),
-				'poke_ignore' => array(
-					'header' => array(
+					],
+				],
+				'poke_ignore' => [
+					'header' => [
 						'value' => $txt['poke_ignore'],
 						'class' => 'centertext',
-					),
-					'data' => array(
-						'function' => function($row) { global $scripturl, $txt, $context;
+					],
+					'data' => [
+						'function' => function($row) use ($scripturl, $txt, $context)
+						{
 							return '<a href="'.$scripturl.'?action=pokes;sa=pokeignore;id='.$row['id_poker'].';'. $context['session_var'] .'='. $context['session_id'] .'">'.$txt['poke_ignore'].'</a>';
 						},
 						'class' => 'centertext',
 						'style' => 'width: 10%',
-					),
-				),
-			),
-			'additional_rows' => array(
-				'updated' => array(
+					],
+				],
+			],
+			'additional_rows' => [
+				'updated' => [
 					'position' => 'top_of_list',
 					'value' => !isset($_REQUEST['success']) ? '' : '<div class="infobox">'. $txt['pokes_action_success']. '</div>',
-				),
-			),
-		);
+				],
+			],
+		];
 		// Let's finishem
 		createList($listOptions);
 	}
@@ -249,9 +256,9 @@ class Pokes
 			SELECT p.id_member
 			FROM {db_prefix}pokes AS p
 			WHERE p.id_member = {int:userid}',
-			array(
+			[
 				'userid' => $user_info['id']
-			)
+			]
 		);
 		$count = $smcFunc['db_num_rows']($logs);
 		$smcFunc['db_free_result']($logs);
@@ -271,16 +278,16 @@ class Pokes
 			WHERE p.id_member = {int:userid}
 			ORDER by {raw:sort}
 			LIMIT {int:start}, {int:maxindex}',
-			array(
+			[
 				'start' => $start,
 				'maxindex' => $items_per_page,
 				'sort' => $sort,
 				'userid' => $user_info['id'],
-			)
+			]
 		);
 
 		// Return the data
-		$context['pokes_list'] = array();
+		$context['pokes_list'] = [];
 		while ($row = $smcFunc['db_fetch_assoc']($result))
 			$context['pokes_list'][] = $row;
 		$smcFunc['db_free_result']($result);
@@ -296,10 +303,10 @@ class Pokes
 			SELECT p.id_poker, p.id_member
 			FROM {db_prefix}pokes AS p
 			WHERE p.id_poker = {int:poker} AND p.id_member = {int:userid}',
-			array(
+			[
 				'userid' => $memID,
 				'poker' => $poker,
-			)
+			]
 		);
 		$count  = $smcFunc['db_num_rows']($verify);
 		$smcFunc['db_free_result']($verify);
@@ -330,10 +337,10 @@ class Pokes
 			$smcFunc['db_query']('', '
 				DELETE FROM {db_prefix}pokes
 				WHERE id_poker = {int:poker} AND id_member = {int:userid}',
-				array(
+				[
 					'userid' => $user_info['id'],
 					'poker' => $memID,
-				)
+				]
 			);
 			redirectexit('action=pokes');
 		}
@@ -359,7 +366,7 @@ class Pokes
 		$memberResult = loadMemberData($memID, false, 'profile');
 		// Check if loadMemberData() has returned a valid result.
 		if (!$memberResult)
-			fatal_lang_error('not_a_user', false, 404);
+			fatal_lang_error('not_a_user', false);
 
 		$context['poke_active'] = self::verifyPoke($memID, $user_info['id']);
 		$context['poke_return'] = self::verifyPoke($user_info['id'], $memID);
@@ -373,33 +380,36 @@ class Pokes
 				$smcFunc['db_query']('', '
 					DELETE FROM {db_prefix}pokes
 					WHERE id_poker = {int:poker} AND id_member = {int:userid}',
-					array(
+					[
 						'userid' => $user_info['id'],
 						'poker' => $memID,
-					)
+					]
 				);
 			}
 
 			// Poke this user
 			$smcFunc['db_insert']('',
 				'{db_prefix}pokes',
-				array(
+				[
 					'id_member' => 'int',
 					'id_poker' => 'int',
 					'date' => 'int',
-				),
-				array(
+				],
+				[
 					$memID,
 					$user_info['id'],
 					time()
-				),
-				array()
+				],
+				[]
 			);
 
+			// Send the alert
 			self::deployAlert($memID);
 
+			// Success
 			redirectexit('action=pokes;success');
 		}
+		// Already sent a poke
 		else
 			fatal_error($txt['poke_already_sent'], false);
 	}
@@ -426,12 +436,12 @@ class Pokes
 				AND content_type = {string:content_type}
 				AND content_id = {int:content_id}
 				AND content_action = {string:content_action}',
-			array(
+			[
 				'id_member' => $memID,
 				'content_type' => 'poke',
 				'content_id' => $user_info['id'],
 				'content_action' => 'poked',
-			)
+			]
 		);
 
 		if ($smcFunc['db_num_rows']($request) > 0)
@@ -441,7 +451,7 @@ class Pokes
 		// Issue, update, move on.
 		$smcFunc['db_insert']('insert',
 			'{db_prefix}user_alerts',
-			array(
+			[
 				'alert_time' => 'int',
 				'id_member' => 'int',
 				'id_member_started' => 'int',
@@ -451,8 +461,8 @@ class Pokes
 				'content_action' => 'string',
 				'is_read' => 'int',
 				'extra' => 'string'
-			),
-			array(
+			],
+			[
 				time(),
 				$memID,
 				$user_info['id'],
@@ -461,11 +471,11 @@ class Pokes
 				$user_info['id'],
 				'poked',
 				0,
-				$smcFunc['json_encode'](array('pokes_link' => '?action=pokes'))
-			),
-			array('id_alert')
+				$smcFunc['json_encode'](['pokes_link' => '?action=pokes'])
+			],
+			['id_alert']
 		);
 
-		updateMemberData($memID, array('alerts' => '+'));
+		updateMemberData($memID, ['alerts' => '+']);
 	}
 }
