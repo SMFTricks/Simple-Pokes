@@ -24,5 +24,3 @@
 
 ## Changelog
 You can find the changelog for Simple Pokes on SMF Tricks: [Changelog](https://smftricks.com/index.php?topic=2015.0)
-
-
