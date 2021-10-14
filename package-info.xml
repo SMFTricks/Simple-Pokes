@@ -3,7 +3,7 @@
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>smftricks:SimplePokes</id>
 	<name>Simple Pokes</name>
-	<version>2.0.5</version>
+	<version>2.0.6</version>
 	<type>modification</type>
 	<install for="2.1 - 2.1.99, 2.1 RC4">
 		<!-- Mod Readme -->
@@ -17,7 +17,7 @@
 			file, You can obtain one at https://www.mozilla.org/en-US/MPL/2.0/.
 		</license>
 		<!-- Languages -->
-		<require-file name="Languages/Pokes.english.php" destination="$languagedir">Language file</require-file>
+		<require-dir name="Languages/SimplePokes" destination="$languagedir">Language files</require-dir>
 		<!-- Images -->
 		<require-file name="Images/poke.png" destination="$imagesdir/icons">Poke icon</require-file>
 		<!-- Pokes Files -->
@@ -40,7 +40,7 @@
 		<!-- Images -->
 		<remove-file name="$imagesdir/icons/poke.png">Poke icon</remove-file>
 		<!-- Languages -->
-		<remove-file name="$languagedir/Pokes.english.php">Language file</remove-file>
+		<remove-dir name="$languagedir/SimplePokes">Language files</remove-dir>
 		<!-- Database -->
 		<database>install.php</database>
 		<!-- Hooks for 2.1 -->

@@ -2,7 +2,7 @@
 
 /**
  * @package Simple Pokes
- * @version 2.0.5
+ * @version 2.0.6
  * @author Diego Andrés <diegoandres_cortes@outlook.com>
  * @copyright Copyright (c) 2021, SMF Tricks
  * @license https://www.mozilla.org/en-US/MPL/2.0/
@@ -17,9 +17,9 @@ class Pokes
 	{
 		global $txt, $scripturl;
 
-		loadLanguage('Pokes');
+		loadLanguage('SimplePokes/');
 
-		$before = 'mlist';
+		$before = 'admin';
 		$temp_buttons = [];
 		foreach ($buttons as $k => $v) {
 			if ($k == $before) {
@@ -44,12 +44,13 @@ class Pokes
 	{
 		global $txt, $scripturl;
 
-		loadLanguage('Pokes');
+		loadLanguage('SimplePokes/');
 
 		// Profile information
 		$before = 'statistics';
 		$temp_buttons = [];
-		foreach ($profile_areas['info']['areas'] as $k => $v) {
+		foreach ($profile_areas['info']['areas'] as $k => $v)
+		{
 			if ($k == $before) {
 				$temp_buttons['pokes'] = [
 					'label' => $txt['pokes'],
@@ -71,11 +72,20 @@ class Pokes
 	{
 		global $scripturl;
 
-		$profile_items[] = [
-			'menu' => 'info',
-			'url' => $scripturl . '?action=pokes',
-			'area' => 'pokes',
-		];
+		$temp_area = [];
+		foreach ($profile_items as $k => $item)
+		{
+			if ($item['area'] == 'showposts')
+			{
+				$temp_area['pokes'] = [
+					'menu' => 'info',
+					'url' => $scripturl . '?action=pokes',
+					'area' => 'pokes',
+				];
+			}
+			$temp_area[$k] = $item;
+		}
+		$profile_items = $temp_area;
 	}
 
 	public static function profileCustomFields($memID, $area)
@@ -118,7 +128,7 @@ class Pokes
 	{
 		global $txt, $context, $scripturl;
 
-		loadLanguage('Pokes');
+		loadLanguage('SimplePokes/');
 
 		// Set all the page stuff
 		$context['page_title'] = $txt['pokes'];
