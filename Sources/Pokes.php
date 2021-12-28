@@ -2,7 +2,7 @@
 
 /**
  * @package Simple Pokes
- * @version 2.0.6
+ * @version 2.0.7
  * @author Diego Andrés <diegoandres_cortes@outlook.com>
  * @copyright Copyright (c) 2021, SMF Tricks
  * @license https://www.mozilla.org/en-US/MPL/2.0/
@@ -42,7 +42,7 @@ class Pokes
 
 	public static function profileAreas(&$profile_areas)
 	{
-		global $txt, $scripturl;
+		global $txt, $scripturl, $settings;
 
 		loadLanguage('SimplePokes/');
 
@@ -55,7 +55,7 @@ class Pokes
 				$temp_buttons['pokes'] = [
 					'label' => $txt['pokes'],
 					'custom_url' => $scripturl . '?action=pokes',
-					'icon' => 'members_request',
+					'icon' => 'poke',
 					'enabled' => true,
 					'permission' => [
 						'own' => 'profile_view',
@@ -66,6 +66,15 @@ class Pokes
 			$temp_buttons[$k] = $v;
 		}
 		$profile_areas['info']['areas'] = $temp_buttons;
+
+		// Add the icon
+		addInlineCss('
+			.main_icons.poke::before {
+				background-position: 0;
+				background-image: url("' . $settings['default_images_url'] . '/icons/poke.png");
+				background-size: contain;
+			}
+		');
 	}
 
 	public static function profilePopup(&$profile_items)
