@@ -2,7 +2,7 @@
 
 /**
  * @package Simple Pokes
- * @version 2.0.7
+ * @version 2.0.8
  * @author Diego Andrés <diegoandres_cortes@outlook.com>
  * @copyright Copyright (c) 2021, SMF Tricks
  * @license https://www.mozilla.org/en-US/MPL/2.0/
@@ -15,7 +15,7 @@ class Pokes
 {
 	public static function hookButtons(&$buttons)
 	{
-		global $txt, $scripturl;
+		global $txt, $scripturl, $settings;
 
 		loadLanguage('SimplePokes/');
 
@@ -27,12 +27,21 @@ class Pokes
 					'title' => $txt['pokes'],
 					'href' => $scripturl . '?action=pokes',
 					'icon' => 'icons/poke.png',
-					'show' => true,
+					'show' => false,
 				];
 			}
 			$temp_buttons[$k] = $v;
 		}
 		$buttons = $temp_buttons;
+
+		// Add the icon
+		addInlineCss('
+			.main_icons.poke::before {
+				background-position: 0;
+				background-image: url("' . $settings['default_images_url'] . '/icons/poke.png");
+				background-size: contain;
+			}
+		');
 	}
 
 	public static function hookActions(&$actions)
@@ -42,7 +51,7 @@ class Pokes
 
 	public static function profileAreas(&$profile_areas)
 	{
-		global $txt, $scripturl, $settings;
+		global $txt, $scripturl;
 
 		loadLanguage('SimplePokes/');
 
@@ -66,15 +75,6 @@ class Pokes
 			$temp_buttons[$k] = $v;
 		}
 		$profile_areas['info']['areas'] = $temp_buttons;
-
-		// Add the icon
-		addInlineCss('
-			.main_icons.poke::before {
-				background-position: 0;
-				background-image: url("' . $settings['default_images_url'] . '/icons/poke.png");
-				background-size: contain;
-			}
-		');
 	}
 
 	public static function profilePopup(&$profile_items)
