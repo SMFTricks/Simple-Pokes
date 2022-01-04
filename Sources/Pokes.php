@@ -2,7 +2,7 @@
 
 /**
  * @package Simple Pokes
- * @version 2.0.8
+ * @version 2.0.9
  * @author Diego Andrés <diegoandres_cortes@outlook.com>
  * @copyright Copyright (c) 2021, SMF Tricks
  * @license https://www.mozilla.org/en-US/MPL/2.0/
@@ -100,6 +100,9 @@ class Pokes
 	public static function profileCustomFields($memID, $area)
 	{
 		global $txt, $context, $scripturl, $user_info;
+
+		if ($area !== 'summary')
+			return;
 
 		if (!empty($context['member']) && $context['member']['id'] != $user_info['id'])
 		{
