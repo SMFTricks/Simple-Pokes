@@ -1,26 +1,22 @@
- <p align="center">
-    <img src="https://smftricks.com/logos/logo.png">
- </p>
- 
-## Simple Pokes
-<img src="https://img.shields.io/badge/License-MPL 2.0-a05a3f?style=flat-square"> <img src="https://img.shields.io/badge/SMF-2.1-3f73a0?style=flat-square">
+![SMF Tricks - Free & Premium Mods and Themes for SMF](https://smftricks.com/logos/logo.png)
 
-- Developed by [Diego Andrés](https://github.com/DiegoAndresCortes)
-- Original developer: [grafitus](https://github.com/beratdogan)
+# Simple Pokes
+![License](https://img.shields.io/badge/License-MPL%202.0-248049) ![Hooks Only](https://img.shields.io/badge/Hooks%20Only-Yes-6041a3) ![SMF 2.1](https://img.shields.io/badge/SMF-2.1-3f73a0)
+
+* Developed by [Diego Andrés](https://github.com/DiegoAndresCortes)
+* Original Developer: [Berat "grafitus" Dogan](https://github.com/beratdogan)
 
 ## Introduction
-* Simple Pokes provides a very simple functionality that emulates the FB Pokes system, and takes advantage of the SMF 2.1 Alerts system for a better interaction with the mod.
+Simple Pokes provides a functionality that emulates the FB Pokes system.
 
-## Features
+### Features
+- List of pokes received
 - Send pokes
 - Ignore pokes
 - Disable/enable alerts when receiving a poke
 
-## Requirements
-* SMF 2.1
-
-## How to install
-* You can install Simple Pokes through the package manager of your forum administration.
-
-## Changelog
-You can find the changelog for Simple Pokes on SMF Tricks: [Changelog](https://smftricks.com/index.php?topic=2015.0)
+### Localization
+- ![English](https://www.simplemachines.org/site_images/lang/english.gif) English
+---
+### [Changelog](https://github.com/SMFTricks/Simple-Pokes/blob/master/CHANGELOG.md)
+### [GitHub](https://github.com/SMFTricks/Simple-Pokes)
