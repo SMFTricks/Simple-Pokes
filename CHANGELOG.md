@@ -2,7 +2,7 @@
 
 #### 2.1 - 22 February 20202
 - ![Improvement](https://smftricks.com/assets/changelog/tag--pencil.png) Code cleanup and improvements.
-- ![Improvement](https://smftricks.com/assets/changelog/tag--pencil.png) Change columns to unsigned.
+- ![Improvement](https://smftricks.com/assets/changelog/tag--pencil.png) Change columns to unsigned and set correct size.
 - ![Improvement](https://smftricks.com/assets/changelog/tag--pencil.png) Support for SMF 2.1.0
 - ![Improvement](https://smftricks.com/assets/changelog/tag--pencil.png) Improved readmes
 ---
