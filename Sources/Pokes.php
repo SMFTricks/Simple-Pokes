@@ -2,9 +2,9 @@
 
 /**
  * @package Simple Pokes
- * @version 2.0.9
+ * @version 2.1
  * @author Diego Andrés <diegoandres_cortes@outlook.com>
- * @copyright Copyright (c) 2021, SMF Tricks
+ * @copyright Copyright (c) 2022, SMF Tricks
  * @license https://www.mozilla.org/en-US/MPL/2.0/
  */
 
@@ -44,11 +44,27 @@ class Pokes
 		');
 	}
 
+	/**
+	 * Pokes::hookActions()
+	 * 
+	 * Add the action for the list of pokes
+	 * 
+	 * @param array $actions The forum actions
+	 * @return void
+	 */
 	public static function hookActions(&$actions)
 	{
 		$actions['pokes'] = [false, 'Pokes::mainActions'];
 	}
 
+	/**
+	 * Pokes::profileAreas()
+	 * 
+	 * Add the poke button in the profile
+	 * 
+	 * @param array $profile_areas The profile areas
+	 * @return void
+	 */
 	public static function profileAreas(&$profile_areas)
 	{
 		global $txt, $scripturl;
@@ -77,6 +93,14 @@ class Pokes
 		$profile_areas['info']['areas'] = $temp_buttons;
 	}
 
+	/**
+	 * Pokes::profilePopup()
+	 * 
+	 * Add the poke action in the profile popup
+	 * 
+	 * @param array $profile_items The profile popup items
+	 * @return void
+	 */
 	public static function profilePopup(&$profile_items)
 	{
 		global $scripturl;
@@ -97,13 +121,24 @@ class Pokes
 		$profile_items = $temp_area;
 	}
 
+	/**
+	 * Pokes::profileCustomFields()
+	 * 
+	 * Add the pokes as a custom field in the profile to play as an action button.
+	 * 
+	 * @param array $memID The member ID
+	 * @param array $area The profile area
+	 * @return void
+	 */
 	public static function profileCustomFields($memID, $area)
 	{
 		global $txt, $context, $scripturl, $user_info;
 
+		// Only show this in the summary
 		if ($area !== 'summary')
 			return;
 
+		// Add the fake custom field
 		if (!empty($context['member']) && $context['member']['id'] != $user_info['id'])
 		{
 			$context['custom_fields']['pokes'] = [
@@ -115,31 +150,54 @@ class Pokes
 		}
 	}
 
-	public static function alertTypes(&$alert_types, &$group_options)
+	/**
+	 * Pokes::alertTypes()
+	 * 
+	 * Add the alert type for the pokes
+	 * 
+	 * @param array $alert_types The alert types
+	 * @return void
+	 */
+	public static function alertTypes(&$alert_types)
 	{
 		$alert_types['pokes'] = [
 				'poked' => ['alert' => 'yes', 'email' => 'never'],
 		];
 	}
 
-	public static function alertFetch(&$alerts, &$formats)
+	/**
+	 * Pokes::alertFetch()
+	 * 
+	 * Add the alert notification
+	 * 
+	 * @param array $alerts The alerts and their content
+	 * @return void
+	 */
+	public static function alertFetch(&$alerts)
 	{
-		global $settings, $scripturl;
+		global $scripturl;
 
 		foreach ($alerts as $alert_id => $alert)
 		{
 			if ($alert['content_type'] == 'poke')
 			{
-				$alerts[$alert_id]['icon'] = '<img class="alert_icon" src="' . $settings['images_url'] . '/icons/poke.png">';
+				$alerts[$alert_id]['icon'] = 'poke';
 				$alerts[$alert_id]['extra']['content_link'] = $scripturl . $alert['extra']['pokes_link'];
 			}
 		}
 	}
 
+	/**
+	 * Pokes::mainActions()
+	 * 
+	 * It creates the list of subactions available in the pokes page
+	 * @return void
+	 */
 	public static function mainActions()
 	{
 		global $txt, $context, $scripturl;
 
+		// Load language
 		loadLanguage('SimplePokes/');
 
 		// Set all the page stuff
@@ -168,6 +226,12 @@ class Pokes
 		$subactions[$sa]['function']();
 	}
 
+	/**
+	 * Pokes::mainList()
+	 * 
+	 * Display the list of pokes and the relevant information
+	 * @return void
+	 */
 	public static function mainList()
 	{
 		global $txt, $context, $scripturl, $sourcedir;
@@ -269,6 +333,12 @@ class Pokes
 		createList($listOptions);
 	}
 
+	/**
+	 * Pokes::countPokes()
+	 * 
+	 * Count the total of pokes
+	 * @return void
+	 */
 	public static function countPokes()
 	{
 		global $smcFunc, $user_info;
@@ -288,6 +358,12 @@ class Pokes
 		return $count;
 	}
 
+	/**
+	 * Pokes::getPokes()
+	 * 
+	 * Get the pokes the user has received
+	 * @return void
+	 */
 	public static function getPokes($start, $items_per_page, $sort)
 	{
 		global $context, $smcFunc, $user_info;
@@ -317,6 +393,15 @@ class Pokes
 		return $context['pokes_list'];
 	}
 
+	/**
+	 * Pokes::verifyPoke()
+	 * 
+	 * Verify information about this poke
+	 * 
+	 * @param int $memID The ID of the member
+	 * @param int $poker The ID of the sender
+	 * @return void
+	 */
 	public static function verifyPoke($memID, $poker)
 	{
 		global $smcFunc;
@@ -336,50 +421,68 @@ class Pokes
 		return $count;
 	}
 
+	/**
+	 * Pokes::actionIgnore()
+	 * 
+	 * Ignores a poke
+	 * 
+	 * @return void
+	 */
 	public static function actionIgnore()
 	{
-		global $smcFunc, $user_info, $txt, $context;
+		global $smcFunc, $user_info, $context;
 
 		// We got something?
 		if (!isset($_REQUEST['id']) || empty($_REQUEST['id']))
-			fatal_error($txt['poke_nouser_error'], false);
-		// He's sending a poke to someone else, right?
-		elseif ($user_info['id'] == $_REQUEST['id'])
-			fatal_error($txt['poke_yourself_error'], false);
+			fatal_lang_error('poke_nouser_error', false);
 
+		// You're sending a poke to someone else, right?
+		elseif ($user_info['id'] == $_REQUEST['id'])
+			fatal_lang_error('poke_yourself_error', false);
+
+		// check the session
 		checkSession('get');
 
+		// Make sure it's an int
 		$memID = (int) $_REQUEST['id'];
 
+		// Check if there's an active poke for this user.
 		$context['poke_active'] = self::verifyPoke($user_info['id'], $memID);
 
-		// Let's see if we can poke him
-		if (!empty($context['poke_active']))
-		{
-			$smcFunc['db_query']('', '
-				DELETE FROM {db_prefix}pokes
-				WHERE id_poker = {int:poker} AND id_member = {int:userid}',
-				[
-					'userid' => $user_info['id'],
-					'poker' => $memID,
-				]
-			);
-			redirectexit('action=pokes');
-		}
-		else
-			fatal_error($txt['poke_not_there'], false);
+		// Let's see if they can poke the user
+		if (empty($context['poke_active']))
+			fatal_lang_error('poke_not_there', false);
+	
+		// Delete this from the log then
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}pokes
+			WHERE id_poker = {int:poker} AND id_member = {int:userid}',
+			[
+				'userid' => $user_info['id'],
+				'poker' => $memID,
+			]
+		);
+		// go back to the pokes
+		redirectexit('action=pokes');
 	}
 
+	/**
+	 * Pokes::actionPoke()
+	 * 
+	 * Sends a poke
+	 * 
+	 * @return void
+	 */
 	public static function actionPoke()
 	{
-		global $smcFunc, $user_info, $txt, $context;
+		global $smcFunc, $user_info, $context;
 
 		// We got something?
 		if (!isset($_REQUEST['id']) || empty($_REQUEST['id']))
-			fatal_error($txt['poke_nouser_error'], false);
+		fatal_lang_error('poke_nouser_error', false);
 		// He's sending a poke to someone else, right?
 		elseif ($user_info['id'] == $_REQUEST['id'])
-			fatal_error($txt['poke_yourself_error'], false);
+		fatal_lang_error('poke_yourself_error', false);
 
 		checkSession('get');
 
@@ -393,49 +496,54 @@ class Pokes
 		$context['poke_active'] = self::verifyPoke($memID, $user_info['id']);
 		$context['poke_return'] = self::verifyPoke($user_info['id'], $memID);
 
-		// Let's see if we can poke him
-		if (empty($context['poke_active']))
-		{
-			// First remove the active poke if there's any
-			if (!empty($context['poke_return']))
-			{
-				$smcFunc['db_query']('', '
-					DELETE FROM {db_prefix}pokes
-					WHERE id_poker = {int:poker} AND id_member = {int:userid}',
-					[
-						'userid' => $user_info['id'],
-						'poker' => $memID,
-					]
-				);
-			}
-
-			// Poke this user
-			$smcFunc['db_insert']('',
-				'{db_prefix}pokes',
-				[
-					'id_member' => 'int',
-					'id_poker' => 'int',
-					'date' => 'int',
-				],
-				[
-					$memID,
-					$user_info['id'],
-					time()
-				],
-				[]
-			);
-
-			// Send the alert
-			self::deployAlert($memID);
-
-			// Success
-			redirectexit('action=pokes;success');
-		}
 		// Already sent a poke
-		else
-			fatal_error($txt['poke_already_sent'], false);
+		if (!empty($context['poke_active']))
+			fatal_lang_error('poke_already_sent', false);
+
+		// First remove the active poke if there's any
+		if (!empty($context['poke_return']))
+		{
+			$smcFunc['db_query']('', '
+				DELETE FROM {db_prefix}pokes
+				WHERE id_poker = {int:poker} AND id_member = {int:userid}',
+				[
+					'userid' => $user_info['id'],
+					'poker' => $memID,
+				]
+			);
+		}
+
+		// Poke this user
+		$smcFunc['db_insert']('',
+			'{db_prefix}pokes',
+			[
+				'id_member' => 'int',
+				'id_poker' => 'int',
+				'date' => 'int',
+			],
+			[
+				$memID,
+				$user_info['id'],
+				time()
+			],
+			[]
+		);
+
+		// Send the alert
+		self::deployAlert($memID);
+
+		// Success
+		redirectexit('action=pokes;success');
 	}
 
+	/**
+	 * Pokes::deployAlert()
+	 * 
+	 * Sends an alert for a poke
+	 * 
+	 * @param int $memID The ID of the member
+	 * @return void
+	 */
 	public static function deployAlert($memID)
 	{
 		global $smcFunc, $sourcedir, $user_info;
@@ -498,6 +606,7 @@ class Pokes
 			['id_alert']
 		);
 
+		// Add the alert to the counter
 		updateMemberData($memID, ['alerts' => '+']);
 	}
 }
