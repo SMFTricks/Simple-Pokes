@@ -2,10 +2,10 @@
 
 /**
  * @package Simple Pokes
- * @version 2.0
+ * @version 2.1
  * @author Diego Andrés <diegoandres_cortes@outlook.com>
- * @copyright Copyright (c) 2018, Diego Andrés
- * @license http://www.mozilla.org/MPL/MPL-1.1.html
+ * @copyright Copyright (c) 2022, SMF Tricks
+ * @license https://www.mozilla.org/en-US/MPL/2.0/
  */
 
 	if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
@@ -39,26 +39,33 @@
 			array('id_task')
 		);
 
-		// Shop items
+		// Pokes log
 		$tables[] = array(
 			'table_name' => '{db_prefix}pokes',
 			'columns' => array(
 				array(
 					'name' => 'id_member',
-					'type' => 'int',
-					'size' => 10,
+					'type' => 'mediumint',
+					'size' => 8,
 					'not_null' => true,
+					'default' => 0,
+					'unsigned' => true,
 				),
 				array(
 					'name' => 'id_poker',
-					'type' => 'int',
-					'size' => 10,
+					'type' => 'mediumint',
+					'size' => 8,
 					'not_null' => true,
+					'default' => 0,
+					'unsigned' => true,
 				),
 				array(
 					'name' => 'date',
 					'type' => 'int',
+					'size' => 10,
 					'not_null' => true,
+					'default' => '0',
+					'unsigned' => true,
 				),
 			),
 			'indexes' => array(
