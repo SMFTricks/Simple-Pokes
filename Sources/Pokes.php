@@ -13,9 +13,17 @@ if (!defined('SMF'))
 
 class Pokes
 {
+	/**
+	 * Pokes::hookButtons()
+	 * 
+	 * Add a poke button to the main menu
+	 * 
+	 * @param array $buttons The forum menu
+	 * @return void
+	 */
 	public static function hookButtons(&$buttons)
 	{
-		global $txt, $scripturl, $settings;
+		global $txt, $scripturl;
 
 		loadLanguage('SimplePokes/');
 
@@ -26,15 +34,27 @@ class Pokes
 				$temp_buttons['pokes'] = [
 					'title' => $txt['pokes'],
 					'href' => $scripturl . '?action=pokes',
-					'icon' => 'icons/poke.png',
+					'icon' => 'poke',
 					'show' => false,
 				];
 			}
 			$temp_buttons[$k] = $v;
 		}
 		$buttons = $temp_buttons;
+	}
 
-		// Add the icon
+	/**
+	 * Pokes::preCSS()
+	 * 
+	 * Add the icon via CSS
+	 * 
+	 * @return void
+	 */
+	public static function preCSS()
+	{
+		global $settings;
+
+		// Add the icon using inline css
 		addInlineCss('
 			.main_icons.poke::before {
 				background-position: 0;
@@ -181,7 +201,7 @@ class Pokes
 		{
 			if ($alert['content_type'] == 'poke')
 			{
-				$alerts[$alert_id]['icon'] = 'poke';
+				$alerts[$alert_id]['icon'] = '<span class="alert_icon  main_icons poke"></span>';
 				$alerts[$alert_id]['extra']['content_link'] = $scripturl . $alert['extra']['pokes_link'];
 			}
 		}

@@ -31,6 +31,7 @@
 		<hook hook="integrate_load_custom_profile_fields" function="Pokes::profileCustomFields" file="$sourcedir/Pokes.php" />
 		<hook hook="integrate_alert_types" function="Pokes::alertTypes" file="$sourcedir/Pokes.php" />
 		<hook hook="integrate_fetch_alerts" function="Pokes::alertFetch" file="$sourcedir/Pokes.php" />
+		<hook hook="integrate_pre_css_output" function="Pokes::preCSS" file="$sourcedir/Pokes.php" />
 	</install>
 
 	<uninstall for="2.1 - 2.1.99">
@@ -51,5 +52,6 @@
 		<hook hook="integrate_load_custom_profile_fields" function="Pokes::profileCustomFields" file="$sourcedir/Pokes.php" reverse="true" />
 		<hook hook="integrate_alert_types" function="Pokes::alertTypes" file="$sourcedir/Pokes.php" reverse="true" />
 		<hook hook="integrate_fetch_alerts" function="Pokes::alertFetch" file="$sourcedir/Pokes.php" reverse="true" />
+		<hook hook="integrate_pre_css_output" function="Pokes::preCSS" file="$sourcedir/Pokes.php" reverse="true" />
 	</uninstall>
 </package-info>
